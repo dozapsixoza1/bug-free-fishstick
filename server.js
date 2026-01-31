@@ -34,7 +34,7 @@ const messageSchema = new mongoose.Schema({
 });
 const Message = mongoose.model('Message', messageSchema);
 
-// Генерация уникального кода (простой пример, можно улучшить)
+// Генерация уникального кода
 function generateCode() {
     return Math.random().toString(36).substring(2, 10).toUpperCase();
 }
@@ -53,7 +53,7 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// Логин (по username/password, возвращает code)
+// Логин
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
@@ -64,18 +64,20 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// Обновление кода (для админа или пользователя)
+// Обновление кода
 app.post('/update-code', async (req, res) => {
-    const { username, newCode } = req.body; // Добавь auth для безопасности
+    const { username, newCode } = req.body;
     try {
-        await User.updateOne({ username }, { code: newCode || generateCode() });
-        res.json({ success: true });
+        const code = newCode || generateCode();
+        await User.updateOne({ username }, { code });
+        console.log(`Code updated for ${username}: ${code}`);
+        res.json({ success: true, newCode: code });
     } catch (err) {
         res.status(400).json({ error: 'Error updating code' });
     }
 });
 
-// Получить чаты/пользователей (для списка)
+// Получить пользователей
 app.get('/users', async (req, res) => {
     const users = await User.find({}, 'username');
     res.json(users);
@@ -88,7 +90,7 @@ app.get('/messages/:from/:to', async (req, res) => {
     res.json(messages);
 });
 
-// Socket для реал-тайм
+// Socket
 io.on('connection', (socket) => {
     console.log('User connected');
 
@@ -100,8 +102,8 @@ io.on('connection', (socket) => {
         const { from, to, text } = data;
         const message = new Message({ from, to, text });
         await message.save();
-        io.to(to).emit('message', data); // Отправить получателю
-        io.to(from).emit('message', data); // Подтверждение отправителю
+        io.to(to).emit('message', data);
+        io.to(from).emit('message', data);
     });
 
     socket.on('disconnect', () => {
