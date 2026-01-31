@@ -13,7 +13,7 @@ document.getElementById('register').addEventListener('click', async () => {
     });
     const data = await res.json();
     if (data.success) {
-        document.getElementById('code-display').innerText = `Твой код: ${data.code}`;
+        document.getElementById('code-display').innerText = `Твой новый код: ${data.code}`;
     } else {
         alert(data.error);
     }
@@ -36,6 +36,33 @@ document.getElementById('login').addEventListener('click', async () => {
         loadUsers();
     } else {
         alert(data.error);
+    }
+});
+
+// Logout
+document.getElementById('logout-btn').addEventListener('click', () => {
+    currentUser = null;
+    currentChat = null;
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('auth').style.display = 'block';
+    document.getElementById('code-display').innerText = '';
+});
+
+// Обновить код
+document.getElementById('update-code-btn').addEventListener('click', async () => {
+    if (currentUser) {
+        const newCode = prompt('Введите новый код (или оставьте пустым для авто-генерации):');
+        const res = await fetch('/update-code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: currentUser, newCode })
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert(`Код обновлён: ${data.newCode}`);
+        } else {
+            alert(data.error);
+        }
     }
 });
 
@@ -67,7 +94,8 @@ async function openChat(to) {
     messages.forEach(msg => {
         const div = document.createElement('div');
         div.classList.add('message', msg.from === currentUser ? 'sent' : 'received');
-        div.innerText = `${msg.text} (${new Date(msg.timestamp).toLocaleTimeString()})`;
+        div.innerText = msg.text;
+        div.setAttribute('data-time', new Date(msg.timestamp).toLocaleTimeString());
         chat.appendChild(div);
     });
     chat.scrollTop = chat.scrollHeight;
@@ -93,7 +121,8 @@ socket.on('message', (data) => {
     if ((data.from === currentUser && data.to === currentChat) || (data.from === currentChat && data.to === currentUser)) {
         const div = document.createElement('div');
         div.classList.add('message', data.from === currentUser ? 'sent' : 'received');
-        div.innerText = `${data.text} (${new Date().toLocaleTimeString()})`;
+        div.innerText = data.text;
+        div.setAttribute('data-time', new Date().toLocaleTimeString());
         document.getElementById('chat-messages').appendChild(div);
         document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
     }
