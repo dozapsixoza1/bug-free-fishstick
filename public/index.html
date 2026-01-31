@@ -6,11 +6,12 @@
     <title>MyChat</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
 </head>
 <body>
     <div id="auth">
-        <h2>Вход / Регистрация</h2>
+        <h2>Добро пожаловать в MyChat</h2>
         <input id="username" placeholder="Имя пользователя">
         <input id="password" type="password" placeholder="Пароль">
         <button id="register">Регистрация</button>
@@ -19,11 +20,14 @@
     </div>
 
     <div id="app" style="display: none;">
-        <!-- Левый сайдбар: пользователи -->
+        <!-- Левый сайдбар -->
         <div class="sidebar">
             <div class="header">
                 <h3>MyChat</h3>
-                <i class="fas fa-cog"></i>
+                <div class="header-buttons">
+                    <button id="update-code-btn">Обновить код</button>
+                    <button id="logout-btn">Выход</button>
+                </div>
             </div>
             <div class="search">
                 <i class="fas fa-search"></i>
