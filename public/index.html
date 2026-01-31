@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyChat</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+</head>
+<body>
+    <div id="auth">
+        <h2>Вход / Регистрация</h2>
+        <input id="username" placeholder="Имя пользователя">
+        <input id="password" type="password" placeholder="Пароль">
+        <button id="register">Регистрация</button>
+        <button id="login">Вход</button>
+        <p id="code-display"></p>
+    </div>
+
+    <div id="app" style="display: none;">
+        <!-- Левый сайдбар: пользователи -->
+        <div class="sidebar">
+            <div class="header">
+                <h3>MyChat</h3>
+                <i class="fas fa-cog"></i>
+            </div>
+            <div class="search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Поиск пользователей" id="user-search">
+            </div>
+            <div class="users" id="user-list"></div>
+        </div>
+
+        <!-- Чат -->
+        <div class="chat-window">
+            <div class="chat-header" id="chat-header"></div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input">
+                <input type="text" placeholder="Сообщение..." id="message-input">
+                <i class="fas fa-paper-plane" id="send-btn"></i>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
